@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large model binary weights (GitHub 100MB limit; train locally via train_evaluator.py)
+saved_model/*.safetensors
+*.bin
+
+# Environment & Editor
+.env
+venv/
+.venv/
+.idea/
+.vscode/

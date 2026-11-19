@@ -1,0 +1,476 @@
+{
+  "python_developer": {
+    "easy": [
+      {
+        "question": "What is the difference between mutable and immutable data types in Python, and can you provide examples of each?",
+        "key_concepts": [
+          "mutability",
+          "id() and memory address",
+          "lists vs tuples",
+          "in-place modification"
+        ],
+        "reference_answer": "In Python, mutable objects can have their state or contents modified after creation without changing their memory identity, whereas immutable objects cannot be modified once instantiated. Common examples of mutable types include lists, dictionaries, and sets, while immutable types include integers, floats, strings, and tuples. When you attempt to alter an immutable object, Python creates a new object in memory and updates the reference rather than mutating the original memory location. Understanding this distinction is critical to avoiding unintended side effects, especially when passing mutable objects as default arguments to functions."
+      },
+      {
+        "question": "How do list comprehensions work in Python, and when should you prefer them over standard for loops?",
+        "key_concepts": [
+          "list comprehension",
+          "syntactic sugar",
+          "readability",
+          "bytecode execution efficiency"
+        ],
+        "reference_answer": "List comprehensions provide a concise, readable syntax for creating new lists by transforming elements from an existing iterable based on optional conditional filters. They are generally preferred over traditional for loops when mapping and filtering operations are straightforward, as they reduce boilerplate code and execute faster at the CPython bytecode level. However, if the logic involves complex nested branching or error handling, standard for loops are better suited to preserve code readability and maintainability. In addition, for large datasets where memory conservation is paramount, generator expressions should be preferred over eager list comprehensions."
+      },
+      {
+        "question": "What is the difference between the equality operator (==) and the identity operator (is) in Python?",
+        "key_concepts": [
+          "value equality",
+          "identity comparison",
+          "memory address",
+          "__eq__() magic method"
+        ],
+        "reference_answer": "The == operator evaluates value equality by invoking the underlying __eq__() magic method to determine whether two objects share identical contents or values. In contrast, the is operator evaluates reference identity, verifying whether two variables point to the exact same object in memory by comparing their id() values. For example, two separate list instances containing the same elements evaluate to True with == but False with is. The is operator is canonically reserved for singleton comparisons such as checking if a variable is None."
+      },
+      {
+        "question": "Explain the purpose of the __init__ method in Python classes and how it differs from __new__.",
+        "key_concepts": [
+          "constructor vs initializer",
+          "__new__",
+          "__init__",
+          "instance instantiation lifecycle"
+        ],
+        "reference_answer": "The __init__ method serves as the instance initializer in Python OOP, responsible for binding attributes and configuring the initial state of a newly created object. In contrast, __new__ is the actual constructor method that allocates memory and returns a brand-new instance of the class before __init__ is invoked. While __init__ takes the newly minted instance as self and returns None, __new__ is a static method that receives the class cls and returns an instance. Developers rarely override __new__, except when subclassing immutable types or implementing design patterns like singletons or metaclasses."
+      },
+      {
+        "question": "How does error handling work in Python using try, except, else, and finally blocks?",
+        "key_concepts": [
+          "try-except block",
+          "else clause",
+          "finally clause",
+          "exception propagation and cleanup"
+        ],
+        "reference_answer": "Python utilizes structured exception handling where potentially hazardous code is executed inside the try block, and specific exceptions are captured and handled within matching except clauses. The optional else block runs exclusively when the try block completes successfully without raising any exceptions, making it ideal for code that should not be guarded. The finally block always executes regardless of whether an exception occurred or was handled, ensuring reliable cleanup actions like closing database connections or file descriptors. Writing granular except statements catching explicit exceptions is considered best practice over catching bare Exception."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What are Python generators and the yield keyword, and how do they help with memory optimization?",
+        "key_concepts": [
+          "generator function",
+          "yield keyword",
+          "lazy evaluation",
+          "iterator protocol and memory efficiency"
+        ],
+        "reference_answer": "Generators are special Python functions that implement the iterator protocol using the yield keyword instead of return to produce a sequence of values lazily on demand. When a generator encounters yield, it pauses execution, preserves its entire local state and stack frame, and returns the yielded value to the caller. Unlike regular functions or lists that compute and hold all elements eagerly in memory, generators compute values one at a time, resulting in an O(1) memory footprint regardless of dataset size. This makes generators indispensable when processing massive logs, streaming APIs, or infinite sequences where storing everything in RAM would cause out-of-memory errors."
+      },
+      {
+        "question": "Explain how Python decorators work under the hood and provide an example of a practical use case.",
+        "key_concepts": [
+          "first-class functions",
+          "closure",
+          "higher-order functions",
+          "functools.wraps"
+        ],
+        "reference_answer": "In Python, decorators are higher-order functions that take a callable object as an input argument, wrap it with additional functionality using closures, and return the modified callable without altering the original function source code. Because functions in Python are first-class citizens, decorators leverage the @decorator_name syntax as syntactic sugar for func = decorator_name(func). Common practical applications include request authentication, timing function execution, caching results with memoization, and input validation. When building custom decorators, utilizing @functools.wraps is essential to preserve the original function metadata, such as its name, docstring, and signature."
+      },
+      {
+        "question": "What is the Global Interpreter Lock (GIL) in CPython, and how does it impact multi-threaded CPU-bound programs?",
+        "key_concepts": [
+          "CPython GIL",
+          "thread safety",
+          "CPU-bound vs I/O-bound",
+          "multiprocessing"
+        ],
+        "reference_answer": "The Global Interpreter Lock (GIL) is a mutex synchronization mechanism in CPython designed to prevent multiple native OS threads from executing Python bytecode simultaneously, thereby protecting reference-counting memory management from race conditions. Because only one thread can execute Python instructions at any given instant, CPU-bound multi-threaded programs cannot utilize multiple CPU cores and often run slower due to context switching overhead. Conversely, I/O-bound operations release the GIL while waiting on network or disk I/O, allowing multi-threading and asynchronous concurrency like asyncio to remain highly effective. To achieve true parallel execution across multi-core systems for compute-heavy workloads, Python developers leverage the multiprocessing module or native C extensions."
+      },
+      {
+        "question": "How does Python memory management and garbage collection work, specifically regarding reference counting and cyclic references?",
+        "key_concepts": [
+          "reference counting",
+          "cyclic garbage collector",
+          "generation thresholds",
+          "gc module"
+        ],
+        "reference_answer": "Python manages memory primarily through reference counting, where every object tracks the number of active references pointing to it and is immediately deallocated when its reference count drops to zero. To resolve circular references—where two or more objects reference each other, preventing their counts from ever reaching zero—Python implements a generational cyclic garbage collector. This collector organizes objects into three generations (0, 1, and 2) based on survival age and periodically runs heuristic cycle-detection algorithms to reclaim unreferenced cyclic clusters. Developers can inspect, tune collection thresholds, or temporarily disable cyclic collection using the built-in gc module when optimizing latency-critical pipelines."
+      },
+      {
+        "question": "What are *args and **kwargs in Python functions, and how does argument unpacking work?",
+        "key_concepts": [
+          "variable positional arguments",
+          "keyword arguments",
+          "tuple and dict unpacking",
+          "argument passing order"
+        ],
+        "reference_answer": "In Python function signatures, *args allows a function to accept an arbitrary number of non-keyword positional arguments packed into a tuple, while **kwargs accepts arbitrary keyword arguments packed into a dictionary. They are frequently used in wrapper functions, subclass constructors invoking super(), and dynamic APIs where the exact parameter list is variable or unknown ahead of time. In call sites, the asterisk prefixes act as unpacking operators, unpacking iterables into positional arguments with * and dictionaries into keyword arguments with **. When defining function signatures, positional arguments must precede *args, which in turn must precede keyword-only arguments and **kwargs."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Explain Python metaclasses, how type acts as the default metaclass, and when you would implement a custom metaclass.",
+        "key_concepts": [
+          "metaclasses",
+          "type constructor",
+          "__init_subclass__",
+          "class instantiation lifecycle"
+        ],
+        "reference_answer": "In Python object model, classes themselves are instances of higher-level classes known as metaclasses, with type serving as the default metaclass that constructs all standard classes. By defining a custom metaclass subclassing type, developers can intercept and customize the class creation lifecycle by overriding __new__ and __init__ before any instances of that class can ever be instantiated. This allows for deep metaprogramming capabilities such as enforcing strict architectural constraints, auto-registering plugins, and injecting attributes into class namespaces at definition time. While modern Python often replaces custom metaclasses with cleaner alternatives like __init_subclass__ or class decorators, metaclasses remain fundamental in complex frameworks like ORMs and schema validation libraries."
+      },
+      {
+        "question": "How does asynchronous programming in Python work with asyncio, event loops, coroutines, and the await syntax?",
+        "key_concepts": [
+          "event loop",
+          "coroutines",
+          "cooperative multitasking",
+          "non-blocking I/O"
+        ],
+        "reference_answer": "Python asyncio framework achieves cooperative concurrency through a single-threaded event loop that manages the execution and scheduling of multiple coroutines. Coroutines are declared with async def and yield control back to the event loop at suspension points marked by await, allowing the loop to service other pending tasks while waiting on non-blocking I/O operations. This paradigm avoids the high memory and context-switching overhead associated with OS threads, enabling a single process to maintain tens of thousands of concurrent network connections efficiently. However, blocking synchronous calls placed within a coroutine will freeze the entire event loop, requiring long-running CPU or blocking I/O tasks to be offloaded using loop.run_in_executor()."
+      },
+      {
+        "question": "What are Python descriptors, how does the descriptor protocol work (__get__, __set__, __delete__), and how do properties leverage it?",
+        "key_concepts": [
+          "descriptor protocol",
+          "data vs non-data descriptors",
+          "attribute lookup order",
+          "@property decorator"
+        ],
+        "reference_answer": "Descriptors are Python objects that customize attribute access by implementing one or more methods of the descriptor protocol: __get__, __set__, and __delete__. When an attribute residing in a class dictionary is accessed on an instance, Python internal attribute lookup mechanism detects the descriptor and invokes its corresponding protocol method instead of normal dictionary lookup. Data descriptors implement __set__ or __delete__ and take precedence over instance dictionary lookup, whereas non-data descriptors implement only __get__ (such as standard methods). Built-in features like the @property decorator, @classmethod, @staticmethod, and ORM column definitions are all implemented under the hood using this descriptor protocol."
+      },
+      {
+        "question": "Explain Python Method Resolution Order (MRO) and the C3 Linearization algorithm in the context of multiple inheritance.",
+        "key_concepts": [
+          "Method Resolution Order (MRO)",
+          "C3 linearization",
+          "diamond problem",
+          "super() cooperative dispatch"
+        ],
+        "reference_answer": "Method Resolution Order (MRO) is the deterministic order in which Python searches base classes when resolving attribute or method lookups on an object, accessible via the __mro__ attribute or .mro() method. Python adopts the C3 Linearization algorithm to solve ambiguities in complex multiple inheritance hierarchies, notably the diamond inheritance problem. C3 guarantees two fundamental invariants: local precedence ordering where parent classes listed in the class definition maintain their relative sequence, and monotonicity where subclass orderings do not contradict superclass orderings. Understanding MRO is crucial for constructing cooperative multiple inheritance systems that rely on super() to correctly dispatch calls across all ancestor classes without duplicate execution."
+      },
+      {
+        "question": "What are __slots__ in Python classes, how do they alter instance memory layout, and what trade-offs do they introduce?",
+        "key_concepts": [
+          "__slots__",
+          "__dict__ avoidance",
+          "memory footprint reduction",
+          "attribute restriction and inheritance caveats"
+        ],
+        "reference_answer": "By default, Python instances store dynamic attributes in an internal dictionary (__dict__), which introduces significant memory overhead when instantiating millions of small objects. Declaring __slots__ with an iterable of attribute names replaces __dict__ with a fixed-size C-level array of descriptor pointers, substantially reducing memory consumption and speeding up attribute access. However, using __slots__ prevents the dynamic assignment of arbitrary new attributes at runtime unless '__dict__' is explicitly included in the slots declaration. Furthermore, inheritance with slots requires careful handling because child classes do not automatically inherit parent slot restrictions and multiple inheritance across classes with non-empty distinct slots is strictly forbidden."
+      }
+    ]
+  },
+  "data_analyst": {
+    "easy": [
+      {
+        "question": "What is the difference between WHERE and HAVING clauses in SQL, and when do you use each?",
+        "key_concepts": [
+          "row-level filtering",
+          "aggregate filtering",
+          "GROUP BY",
+          "query execution order"
+        ],
+        "reference_answer": "In SQL, the WHERE clause filters individual rows before any data aggregation or grouping takes place, evaluating row-level conditions against raw table columns. In contrast, the HAVING clause filters aggregated groups after the GROUP BY clause has executed, allowing conditions to evaluate aggregate functions such as COUNT(), SUM(), or AVG(). Because WHERE cannot evaluate aggregate functions, queries requiring conditions on grouped metrics must rely on HAVING. In terms of execution order, SQL processes WHERE first to prune rows, then groups the remaining rows, and finally applies HAVING to filter the summarized groups."
+      },
+      {
+        "question": "Explain the difference between INNER JOIN, LEFT JOIN, RIGHT JOIN, and FULL OUTER JOIN in relational databases.",
+        "key_concepts": [
+          "INNER JOIN",
+          "LEFT JOIN",
+          "OUTER JOIN",
+          "NULL handling"
+        ],
+        "reference_answer": "Relational joins combine columns from two tables based on a related join condition. An INNER JOIN returns only the rows where there is a matching condition in both tables, omitting any unmatched records. A LEFT JOIN returns all records from the left table alongside matching records from the right table, populating NULL for right-table columns when no match exists. Conversely, a RIGHT JOIN preserves all rows from the right table, and a FULL OUTER JOIN retains all records from both tables, filling in NULL values on either side whenever a join condition is unmet."
+      },
+      {
+        "question": "What is the difference between mean, median, and mode, and how do outliers affect them?",
+        "key_concepts": [
+          "central tendency",
+          "skewness",
+          "outlier sensitivity",
+          "robust statistics"
+        ],
+        "reference_answer": "Mean, median, and mode are fundamental measures of central tendency used to describe the center of a data distribution. The mean is the arithmetic average of all data points, making it highly sensitive to extreme values and skewed distributions. The median represents the middle value when data is sorted, serving as a robust metric that resists outlier distortion in skewed datasets like income or house prices. The mode reflects the most frequently occurring value in the dataset and is particularly useful for analyzing categorical data."
+      },
+      {
+        "question": "In pandas, what is the difference between .loc and .iloc indexing methods?",
+        "key_concepts": [
+          ".loc label-based",
+          ".iloc integer-positional",
+          "slice bounds",
+          "DataFrame indexing"
+        ],
+        "reference_answer": "In pandas, .loc is a label-based indexer that selects rows and columns using index labels or boolean arrays, with slice endpoints being inclusive of both start and stop boundaries. On the other hand, .iloc is an integer-based indexer that references data by its zero-based numerical positions, following standard Python slicing where the stop boundary is exclusive. If a DataFrame has non-integer index labels like strings or timestamps, .loc accesses elements by those explicit labels, whereas .iloc continues to use positional integers from 0 to N-1. Choosing the correct indexer avoids subtle indexing bugs and ensures unambiguous selection across manipulated dataframes."
+      },
+      {
+        "question": "What are the common strategies for handling missing values (nulls/NaNs) in a dataset using pandas?",
+        "key_concepts": [
+          "imputation",
+          "dropna()",
+          "fillna()",
+          "MCAR vs MAR vs MNAR"
+        ],
+        "reference_answer": "Handling missing values in pandas begins with diagnosing whether values are missing completely at random (MCAR), at random (MAR), or not at random (MNAR). The simplest approach is deletion using .dropna(), which drops rows or columns containing missing entries, though this risks substantial data loss if missingness is widespread. Alternatively, imputation replaces nulls using .fillna(), employing statistical measures such as mean, median for skewed continuous variables, or mode for categorical features. For time series or ordered data, forward-fill (ffill) or interpolation methods are often applied to preserve sequential continuity."
+      }
+    ],
+    "medium": [
+      {
+        "question": "How do SQL window functions work, and what is the difference between RANK(), DENSE_RANK(), and ROW_NUMBER()?",
+        "key_concepts": [
+          "OVER() and PARTITION BY",
+          "ROW_NUMBER()",
+          "RANK()",
+          "DENSE_RANK()"
+        ],
+        "reference_answer": "SQL window functions perform calculations across a specified set of table rows related to the current row without collapsing the rows into a single aggregated output. The OVER() clause, often paired with PARTITION BY and ORDER BY, defines the analytical window partition and ordering. ROW_NUMBER() assigns a strictly sequential unique integer to every row regardless of ties. RANK() assigns identical ranks to tied rows but skips subsequent numbers by the count of ties, whereas DENSE_RANK() assigns identical ranks to ties without skipping any rank values in the subsequent sequence."
+      },
+      {
+        "question": "Explain the concept of data normalization versus denormalization in relational database design, and when each is preferred.",
+        "key_concepts": [
+          "normalization forms (1NF/2NF/3NF)",
+          "denormalization",
+          "data redundancy",
+          "OLTP vs OLAP"
+        ],
+        "reference_answer": "Data normalization organizes database schemas into normal forms (such as 1NF, 2NF, 3NF) to minimize data redundancy, avoid insertion and update anomalies, and enforce referential integrity. It is heavily utilized in transactional systems (OLTP) where frequent write, update, and delete operations benefit from normalized, isolated tables. Denormalization intentionally reintroduces redundant data or merges tables to reduce expensive multi-table joins and optimize read performance. Denormalization is favored in analytical data warehouses and reporting systems (OLAP), where fast read queries across massive datasets supersede write optimization."
+      },
+      {
+        "question": "What is the difference between correlation and causation, and how can an analyst evaluate if a relationship is causal?",
+        "key_concepts": [
+          "correlation vs causation",
+          "confounding variables",
+          "A/B testing and randomized controlled trials",
+          "observational bias"
+        ],
+        "reference_answer": "Correlation indicates a statistical association or co-movement between two variables, whereas causation proves that a change in one variable directly induces a change in the other. Observing high correlation does not imply causation because confounding variables, reverse causality, or mere coincidence could produce spurious relationships. To establish causality, analysts ideally run Randomized Controlled Trials (A/B testing) where subjects are randomly assigned to control and treatment groups to isolate the treatment effect. When experimental manipulation is infeasible, quasi-experimental methods like difference-in-differences, instrumental variables, or propensity score matching are utilized to control for confounders."
+      },
+      {
+        "question": "How do you detect and handle outliers in a continuous numerical feature during exploratory data analysis (EDA)?",
+        "key_concepts": [
+          "IQR method",
+          "Z-score threshold",
+          "boxplots",
+          "winsorization and trimming"
+        ],
+        "reference_answer": "Outliers in continuous features are commonly detected using graphical techniques like boxplots and scatter plots, as well as parametric and non-parametric statistical metrics. For normally distributed data, the Z-score method flags data points exceeding plus or minus 3 standard deviations from the mean as potential outliers. For skewed distributions, the Interquartile Range (IQR) rule is preferred, defining outliers as values falling below Q1 - 1.5*IQR or above Q3 + 1.5*IQR. Once identified, analysts handle outliers based on business context: retaining them if they represent genuine rare events, trimming them if they are measurement errors, or applying winsorization or log transformations to reduce their leverage on models."
+      },
+      {
+        "question": "Explain how groupby() and agg() work in pandas, and how you would perform multiple custom aggregations per column.",
+        "key_concepts": [
+          "split-apply-combine",
+          "groupby()",
+          "agg() dictionary mapping",
+          "multi-level index columns"
+        ],
+        "reference_answer": "The pandas groupby() method implements the split-apply-combine pattern, splitting data into groups based on key values, applying functions to each subset independently, and combining the results into a cohesive DataFrame. Pairing groupby() with .agg() allows analysts to perform flexible, vectorized aggregations across columns rather than computing single metrics in isolation. By passing a dictionary mapping column names to lists of aggregation functions—such as {'sales': ['sum', 'mean'], 'quantity': 'max'}—one can execute diverse aggregations simultaneously. The resulting DataFrame contains a hierarchical MultiIndex for columns, which can be flattened using list comprehensions or method chaining for downstream reporting."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Explain Type I and Type II errors in hypothesis testing, along with statistical power and p-values.",
+        "key_concepts": [
+          "Type I error (alpha)",
+          "Type II error (beta)",
+          "statistical power (1-beta)",
+          "p-value interpretation"
+        ],
+        "reference_answer": "In statistical hypothesis testing, a Type I error (false positive, denoted as alpha) occurs when a researcher mistakenly rejects a true null hypothesis, while a Type II error (false negative, denoted as beta) occurs when failing to reject a false null hypothesis. The p-value quantifies the probability of observing test statistics at least as extreme as the empirical data assuming the null hypothesis is true; if p is less than alpha, the null is rejected. Statistical power, defined as 1 - beta, represents the probability of correctly rejecting a false null hypothesis and detecting an authentic effect when one exists. Balancing these error rates requires conducting rigorous sample size power calculations prior to experiment launch to ensure sufficient statistical sensitivity without inflating false discovery rates."
+      },
+      {
+        "question": "How do you construct and optimize a complex SQL query that involves Common Table Expressions (CTEs), recursive queries, and indexing strategies?",
+        "key_concepts": [
+          "Common Table Expressions (CTEs)",
+          "recursive CTEs",
+          "B-tree indexing",
+          "EXPLAIN and execution plan"
+        ],
+        "reference_answer": "Common Table Expressions (CTEs) modularize complex SQL logic into readable, self-contained subqueries defined with WITH, and recursive CTEs enable hierarchical traversal such as organizational charts or graph trees via an anchor member and recursive union. To optimize execution, analysts inspect database query plans using EXPLAIN ANALYZE to identify bottleneck operations like full sequential table scans and excessive hash joins. Creating appropriate composite B-tree indexes matching query filter, join, and order keys significantly accelerates index-seek operations. Furthermore, understanding whether the SQL engine treats CTEs as inlined subqueries or materialized temp tables prevents unexpected memory spillage and unindexed temporary scans."
+      },
+      {
+        "question": "What is Simpson's Paradox in statistical analysis, and how can a data analyst detect and prevent misleading conclusions caused by it?",
+        "key_concepts": [
+          "Simpson's Paradox",
+          "lurking and confounding variable",
+          "stratification",
+          "aggregated vs disaggregated data"
+        ],
+        "reference_answer": "Simpson's Paradox occurs when a statistical trend or correlation observed across different sub-groups disappears or reverses when the groups are combined into an aggregated dataset. This counterintuitive phenomenon is driven by an unobserved confounding variable or unequal sample distributions across groups that skew aggregate proportions. Analysts can detect Simpson's Paradox by disaggregating high-level metrics across key demographic, behavioral, or categorical segments rather than relying purely on omnibus summary figures. To prevent faulty decision-making, analysts must stratify data by suspected confounders and utilize weighted stratified averages or multivariate regression models to isolate genuine underlying effects."
+      },
+      {
+        "question": "How do you design a robust feature engineering and validation pipeline to prevent data leakage in predictive modeling?",
+        "key_concepts": [
+          "data leakage",
+          "target leakage",
+          "train-test contamination",
+          "Pipelines and cross-validation"
+        ],
+        "reference_answer": "Data leakage occurs when information from outside the training dataset—particularly the target variable or future unseen data—inadvertently contaminates the model training process, yielding overly optimistic evaluation metrics that collapse in production. To prevent train-test contamination, all preprocessing transformations such as scaling, imputation, encoding, and feature selection must be fitted exclusively on training splits and merely transformed on validation and test folds. Utilizing integrated pipeline architectures like Scikit-Learn's Pipeline inside proper cross-validation routines ensures that transformation parameters are recomputed within each cross-validation fold. For temporal datasets, strict time-based splits (out-of-time validation) must be enforced rather than random k-fold splits to prevent lookahead bias."
+      },
+      {
+        "question": "Explain the mathematical difference between L1 (Lasso) and L2 (Ridge) regularization and how they impact model interpretability and coefficient shrinkage.",
+        "key_concepts": [
+          "L1 regularization (Lasso)",
+          "L2 regularization (Ridge)",
+          "coefficient shrinkage vs feature selection",
+          "cost function penalty"
+        ],
+        "reference_answer": "Regularization adds a penalty term to the regression loss function to prevent overfitting by penalizing large model coefficients. L1 regularization (Lasso) adds the sum of the absolute values of the coefficients to the loss, which geometrically produces sharp diamond-shaped constraint boundaries that drive less informative coefficients exactly to zero, effectively performing automated feature selection. In contrast, L2 regularization (Ridge) adds the sum of squared coefficients, producing smooth circular constraint boundaries that shrink coefficients asymptotically toward zero without zeroing them out entirely, thereby maintaining all features in the presence of multicollinearity. Choosing between them depends on goals: Lasso yields sparse, highly interpretable models, whereas Ridge handles collinear feature spaces gracefully, with Elastic Net combining both penalties when needed."
+      }
+    ]
+  },
+  "web_developer": {
+    "easy": [
+      {
+        "question": "What is the Document Object Model (DOM), and how does JavaScript manipulate it to create dynamic web pages?",
+        "key_concepts": [
+          "DOM tree representation",
+          "nodes and elements",
+          "DOM API methods",
+          "event listeners"
+        ],
+        "reference_answer": "The Document Object Model (DOM) is an object-oriented structural representation of an HTML document arranged as a hierarchical tree of nodes and elements that browsers render in memory. JavaScript interacts with the DOM using built-in API methods like document.getElementById(), querySelector(), and createElement() to read, update, or remove HTML elements and attributes dynamically. It can also attach event listeners using addEventListener() to listen for user interactions such as clicks, typing, or scrolling, and trigger reactive UI modifications. By updating styles, content, and structure without full page reloads, JavaScript transforms static markup into responsive, interactive web applications."
+      },
+      {
+        "question": "Explain the CSS Box Model and how the box-sizing: border-box property impacts layout calculations.",
+        "key_concepts": [
+          "content, padding, border, margin",
+          "content-box default",
+          "box-sizing: border-box",
+          "element dimension calculation"
+        ],
+        "reference_answer": "The CSS Box Model is the foundational layout framework in web styling, specifying that every HTML element is enclosed in four concentric rectangular boxes: content, padding, border, and margin. Under the default box-sizing: content-box, an element declared width and height apply exclusively to the content area, meaning added padding and borders increase the element actual rendered footprint on the screen. Setting box-sizing: border-box changes this calculation so that declared dimensions encompass content, padding, and borders altogether. This modern best practice prevents unintended layout overflows and drastically simplifies responsive grid and flexbox calculations."
+      },
+      {
+        "question": "What are semantic HTML tags, and why are they important for accessibility and SEO?",
+        "key_concepts": [
+          "semantic HTML elements",
+          "accessibility and screen readers",
+          "SEO crawler comprehension",
+          "document structure"
+        ],
+        "reference_answer": "Semantic HTML refers to using markup tags that clearly convey the meaning and purpose of the content they contain to both browsers and developers, such as <header>, <nav>, <main>, <article>, and <footer>, rather than generic <div> or <span> tags. These elements are vital for digital accessibility because assistive technologies and screen readers rely on semantic landmarks to help visually impaired users navigate content hierarchies efficiently. Furthermore, search engine crawlers utilize semantic tags to discern the primary context and weight of web pages, which directly enhances Search Engine Optimization (SEO) rankings. Writing clean semantic HTML also fosters improved codebase readability and easier long-term maintainability for engineering teams."
+      },
+      {
+        "question": "What is the difference between let, const, and var in modern JavaScript?",
+        "key_concepts": [
+          "block scope vs function scope",
+          "hoisting and temporal dead zone",
+          "reassignment vs mutability",
+          "const guarantees"
+        ],
+        "reference_answer": "In modern JavaScript (ES6+), var is function-scoped and hoisted with an initial value of undefined, making it prone to variable leakage and subtle scoping bugs. In contrast, let and const are block-scoped, existing within the enclosing curly braces and subject to the Temporal Dead Zone (TDZ), which throws a ReferenceError if accessed before declaration. While let allows variable reassignment, const prevents reassignment of the variable identifier to another memory reference, making it ideal for values intended to remain immutable in assignment. However, declaring an object or array with const does not make internal properties immutable; contents can still be mutated unless explicitly frozen with Object.freeze()."
+      },
+      {
+        "question": "What are HTTP request methods (GET, POST, PUT, DELETE, PATCH), and what are their semantic purposes?",
+        "key_concepts": [
+          "CRUD operations",
+          "idempotency",
+          "safe vs unsafe methods",
+          "RESTful resource manipulation"
+        ],
+        "reference_answer": "HTTP request methods define the desired action to be performed on a specified server resource in accordance with REST conventions. GET is a safe, idempotent method used exclusively to retrieve data without modifying server state, whereas POST is a non-idempotent method used to submit data and create new resources. PUT replaces the entire target resource with the uploaded payload idempotently, while PATCH applies partial modifications to an existing resource. Finally, DELETE removes the designated resource from the server idempotently, ensuring predictable interaction patterns across web clients and APIs."
+      }
+    ],
+    "medium": [
+      {
+        "question": "How does the JavaScript Event Loop work, including the call stack, microtask queue, and macrotask queue?",
+        "key_concepts": [
+          "call stack",
+          "microtask queue (Promises)",
+          "macrotask queue (setTimeout)",
+          "non-blocking concurrency"
+        ],
+        "reference_answer": "JavaScript executes code on a single-threaded runtime utilizing a call stack for synchronous function execution and an event loop to orchestrate asynchronous tasks. When synchronous code finishes executing and the call stack empties, the event loop prioritizes draining the microtask queue—which houses Promise callbacks (.then(), await), process.nextTick, and MutationObservers. Once all microtasks are exhausted, the event loop picks a single task from the macrotask queue (task queue), which handles events like setTimeout, setInterval, and I/O callbacks. This continuous cycle guarantees non-blocking execution while maintaining a deterministic order of operations across asynchronous events."
+      },
+      {
+        "question": "What is the difference between client-side rendering (CSR) and server-side rendering (SSR), and what are the trade-offs?",
+        "key_concepts": [
+          "Client-Side Rendering (CSR)",
+          "Server-Side Rendering (SSR)",
+          "First Contentful Paint (FCP)",
+          "Time to Interactive (TTI)"
+        ],
+        "reference_answer": "Client-side rendering (CSR) delivers a minimal HTML shell and downloads a JavaScript bundle that executes in the user browser to build the DOM dynamically, which provides rich single-page app interactions but often suffers from slower initial page loads (First Contentful Paint) and poorer SEO. In contrast, server-side rendering (SSR) generates full HTML on the server for each incoming request, delivering pre-rendered markup immediately to the client for superior SEO indexation and faster initial content rendering. However, SSR introduces higher server load, slower Time to First Byte (TTFB), and requires a client-side hydration phase before the page becomes fully interactive (Time to Interactive). Modern meta-frameworks frequently employ hybrid strategies such as Static Site Generation (SSG) or Incremental Static Regeneration (ISR) to balance these trade-offs."
+      },
+      {
+        "question": "What is Cross-Origin Resource Sharing (CORS), why does the browser enforce it, and how do you resolve CORS errors?",
+        "key_concepts": [
+          "Same-Origin Policy",
+          "CORS headers",
+          "preflight OPTIONS request",
+          "Access-Control-Allow-Origin"
+        ],
+        "reference_answer": "Cross-Origin Resource Sharing (CORS) is a browser-enforced security mechanism built upon the Same-Origin Policy to restrict web applications running at one origin from requesting resources located at a different origin (domain, protocol, or port). When making cross-origin requests that use complex HTTP methods or custom headers, browsers automatically issue an initial OPTIONS preflight request to verify server permissions. To resolve CORS errors, the destination backend server must include appropriate response headers, notably Access-Control-Allow-Origin, Access-Control-Allow-Methods, and Access-Control-Allow-Headers. Attempting to bypass CORS on the client-side is ineffective; proper resolution requires either configuring backend headers or routing requests through an intermediary reverse proxy during local development."
+      },
+      {
+        "question": "Explain how modern CSS Flexbox and CSS Grid differ, and when an engineer should choose one over the other.",
+        "key_concepts": [
+          "Flexbox one-dimensional",
+          "CSS Grid two-dimensional",
+          "content-first vs layout-first",
+          "responsive alignment"
+        ],
+        "reference_answer": "CSS Flexbox is a one-dimensional layout system designed for distributing space and aligning items along either a horizontal row or a vertical column at a time, making it content-first and ideal for linear UI elements like navigation bars, buttons, and card headers. CSS Grid is a two-dimensional layout system capable of handling both rows and columns simultaneously, making it layout-first and optimal for overarching page structures, dashboards, and intricate magazine-style layouts. While Flexbox elements determine their size based on internal content and flex properties, Grid structures enforce rigid coordinate tracks using grid templates and fractional units (fr). Front-end engineers routinely compose both systems harmoniously, employing Grid for primary page scaffolding and Flexbox for fine-grained component alignment."
+      },
+      {
+        "question": "What are Progressive Web Apps (PWAs), and what role do Service Workers and web app manifests play in them?",
+        "key_concepts": [
+          "Progressive Web Apps (PWAs)",
+          "Service Worker lifecycle",
+          "offline caching and Cache API",
+          "web app manifest"
+        ],
+        "reference_answer": "Progressive Web Apps (PWAs) are web applications built with modern web capabilities to deliver native app-like user experiences across browsers, including installability, offline availability, and background synchronization. At the core of a PWA is the Service Worker, a client-side programmable network proxy running in a background thread that intercepts HTTP requests and serves cached assets via the Cache API when offline or on unstable networks. The Web App Manifest is a JSON metadata file defining how the application appears upon installation, including app icons, display modes (e.g., standalone), screen orientation, and theme colors. Together, these technologies provide reliable offline performance, fast loading speeds, and push notification functionality without requiring distribution via native app stores."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Explain the mechanics of Cross-Site Scripting (XSS) and Cross-Site Request Forgery (CSRF), and how modern web applications defend against them.",
+        "key_concepts": [
+          "Stored vs Reflected XSS",
+          "Content Security Policy (CSP)",
+          "CSRF tokens",
+          "SameSite cookie attribute"
+        ],
+        "reference_answer": "Cross-Site Scripting (XSS) occurs when malicious JavaScript is injected into trusted web applications, executing within the victim session to steal sensitive data like session tokens. XSS defenses include strict context-aware output encoding, adopting frameworks with automated escaping, utilizing Content Security Policy (CSP) headers to restrict script execution origins, and storing authentication tokens in HttpOnly cookies to block script access. Cross-Site Request Forgery (CSRF) tricks an authenticated user browser into transmitting unauthorized state-changing HTTP requests to a vulnerable server where the user is already authenticated. CSRF mitigation relies on anti-CSRF synchronization tokens, custom request verification headers (such as X-Requested-With), and configuring cookie attributes with SameSite=Lax or SameSite=Strict to stop cross-site cookie transmission."
+      },
+      {
+        "question": "How does the browser rendering engine convert HTML, CSS, and JavaScript into screen pixels, and how do you optimize Critical Rendering Path?",
+        "key_concepts": [
+          "DOM and CSSOM construction",
+          "Render Tree",
+          "Layout and Paint",
+          "compositing and Critical Rendering Path"
+        ],
+        "reference_answer": "When rendering a web page, the browser parses HTML tokens into the Document Object Model (DOM) and CSS into the CSS Object Model (CSSOM), combining them into a Render Tree containing only visible nodes. The engine then initiates Layout (reflow) to calculate exact geometric coordinates for each element, followed by Paint to rasterize pixels, and Compositing to assemble distinct layers onto the screen via the GPU. Optimizing the Critical Rendering Path entails minimizing render-blocking resources by deferring non-critical scripts with async or defer, inlining critical above-the-fold CSS, and lazy-loading secondary stylesheets. Furthermore, avoiding layout thrashing—caused by querying geometry properties immediately after mutating the DOM—and animating exclusively GPU-accelerated properties (transform and opacity) preserves smooth 60fps rendering."
+      },
+      {
+        "question": "Explain the Virtual DOM reconciliation algorithm in frameworks like React, and how keys optimize component diffing.",
+        "key_concepts": [
+          "Virtual DOM",
+          "reconciliation heuristic",
+          "tree diffing O(n)",
+          "stable element keys"
+        ],
+        "reference_answer": "The Virtual DOM is a lightweight in-memory JavaScript representation of the actual DOM tree that UI frameworks use to batch and optimize browser updates. During state changes, a new Virtual DOM tree is generated, and a heuristic reconciliation diffing algorithm compares it against the prior tree in O(n) linear time rather than O(n^3) traditional tree diffing. The algorithm assumes elements of different types generate distinct trees and relies on unique, stable key attributes to track items across dynamic collections. Supplying stable keys allows the diffing engine to accurately identify which elements were added, reordered, or removed, avoiding unnecessary re-renders or erroneous DOM node destruction."
+      },
+      {
+        "question": "What are WebSockets and WebRTC, how do they differ from HTTP/2 and Server-Sent Events (SSE), and when should each be used for real-time communication?",
+        "key_concepts": [
+          "full-duplex persistent connection",
+          "WebSockets vs SSE",
+          "WebRTC peer-to-peer",
+          "HTTP/2 multiplexing"
+        ],
+        "reference_answer": "WebSockets provide persistent, bi-directional, full-duplex TCP connections initiated through an HTTP handshake upgrade, enabling low-latency data streaming where both client and server can transmit messages independently without request-response overhead. Server-Sent Events (SSE) offer unidirectional server-to-client streaming over standard HTTP, making them simpler and better suited for scenarios like live stock feeds or notifications that require no client-to-server pushing. WebRTC enables direct peer-to-peer audio, video, and arbitrary binary data streaming over UDP, minimizing latency for video conferencing and interactive multiplayer gaming. While HTTP/2 multiplexes multiple concurrent requests over a single connection, it remains request-response based, making WebSockets or WebRTC the preferred choice for real-time bidirectional communication."
+      },
+      {
+        "question": "How do you implement a secure OAuth 2.0 and OpenID Connect (OIDC) authentication and authorization flow in Single Page Applications (SPAs)?",
+        "key_concepts": [
+          "Authorization Code Flow with PKCE",
+          "tokens: access vs refresh vs ID",
+          "Proof Key for Code Exchange",
+          "silent token refresh and secure storage"
+        ],
+        "reference_answer": "For public Single Page Applications that cannot securely store client secrets, OAuth 2.0 mandates the Authorization Code Flow with Proof Key for Code Exchange (PKCE) to prevent code interception attacks. The client generates a cryptographic code verifier and derives a code challenge, sending the challenge with the initial authorization request and the verifier during token exchange to prove client authenticity. OpenID Connect (OIDC) extends this flow by issuing a cryptographically signed ID Token (JWT) that provides verifiable identity claims alongside the OAuth access token. In modern SPAs, storing access and refresh tokens in localStorage is avoided due to XSS vulnerabilities; instead, tokens should be handled via secure backend-for-frontend (BFF) proxies or stored in HttpOnly, SameSite=Strict, Secure cookies with rotating refresh tokens."
+      }
+    ]
+  }
+}
